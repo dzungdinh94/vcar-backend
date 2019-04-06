@@ -8,7 +8,7 @@ module.exports = {
   cryptoKey: 'B>x2.6BQ:G-HW,><',
   database: {
     USER: 'root',
-    PASSWORD: 'motconvit',
+    PASSWORD: 'toanpro01',
     DATABASENAME: 'dulich',
     HOST: 'localhost',
     PORT: 3306,
