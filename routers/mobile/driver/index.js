@@ -59,6 +59,7 @@ router.post('/login', jsonParser, (req, res, next) => {
 
 router.post('/signin', jsonParser, (req, res, next) => {
   const { phone, password, fullname, avatar, numberCar, typeCarId } = req.body
+  console.log(req.body,"body");
   if (!phone || !password || !fullname || !numberCar || !typeCarId) return cf.sendData(res, 'ERROR', 'Nhập đầy đủ thông tin');
   models.Driver.findOrCreate({
     where: {

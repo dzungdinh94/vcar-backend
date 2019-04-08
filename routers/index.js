@@ -54,6 +54,7 @@ let upload = multer({ storage: storageMulter }).array('files', 1);
 // router.use('/admin/fileupload', (req, res, next) => AuthMiddeWare.verifyAdmin(req, res, next));
 router.post('/admin/fileupload', (req, res, next) => {
   upload(req, res, (err) => {
+    console.log(req.body,"hiih");
     if (!err) return cf.sendData(res, 'SUCCESS', 'SUCCESS', req.files[0].filename)
     cf.wirtelog(err, module.filename)
     cf.sendData(res, 'ERROR', 'ERROR', err)

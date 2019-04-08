@@ -16,7 +16,7 @@ const sequelize = new Sequelize(config.database.DATABASENAME, config.database.US
     operatorsAliases: false,
     port: config.database.PORT,
     dialectOptions: {
-        charset: 'utf8',
+        charset: 'utf8mb4',
         collate: 'utf8_general_ci',
     },
     pool: {
