@@ -15,10 +15,19 @@ const sequelize = new Sequelize(config.database.DATABASENAME, config.database.US
     dialect: config.database.DIALECT,
     operatorsAliases: false,
     port: config.database.PORT,
-    dialectOptions: {
+    // dialectOptions: {
+    //     charset: 'utf8',
+    //     collate: 'utf8_general_ci',
+    // },
+    define: {
+        underscored: false,
+        freezeTableName: false,
         charset: 'utf8mb4',
-        collate: 'utf8_general_ci',
-    },
+        dialectOptions: {
+          collate: 'utf8_general_ci'
+        },
+        timestamps: true
+      },    
     pool: {
         max: 5,
         min: 0,
@@ -27,14 +36,6 @@ const sequelize = new Sequelize(config.database.DATABASENAME, config.database.US
     }
 });
 
-sequelize
-    .authenticate()
-    .then(() => {
-        console.log('Connection has been established successfully.');
-    })
-    .catch(err => {
-        console.error('Unable to connect to the database:', err);
-    });
 
 fs.readdirSync(__dirname)
     .filter(file => (file.indexOf('.') !== 0) && (file !== basename) && (file.slice(-3) === '.js'))
