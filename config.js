@@ -15,7 +15,7 @@ module.exports = {
     DIALECT: 'mysql'
   },
   pageLimit: 10,
-  firebaseAuthorizationKey: 'AAAAGvkuEn4:APA91bGE7kwF7tXuWOkLKZPpi7G00i1YjtPWEoguj1S3hj3YV1Qbl7AdAjnC3zpolguUiD_sZ-FZa8tNySdFcXH3la7nektOQH_h2Itbrf_C8FcCfH4zV_Q-HpU9QpCtWi3hc9I7s7-q',
+  firebaseAuthorizationKey: 'AAAAAhHdXgc:APA91bEg7VRSk00rqRIlezXGQCfQysYtuQsePg-6lc1g3h4q8W9YbdbBpNdVvj7xiR8ag52rbVt6qQ6gHseDVtW6tm9nhIbxerDEGLjhujhqI4P04ZpkArGPBw2OssTdMTDigPVSvAI3',
   pingInterval: 2000, // ping request moi 2s socket io
   pingTimeout: 10000, // sau 10s bao disconnect khi mat mang,
   userType: {

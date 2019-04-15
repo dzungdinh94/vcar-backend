@@ -5,11 +5,11 @@ const moment = require('moment');
 
 
 const admin = require("firebase-admin");
-const serviceAccount = require("../b52-driver-firebase-adminsdk-n8l6q-804cfd1cda.json");
+const serviceAccount = require("../devvcar-firebase-adminsdk-kc780-469e8bed06.json");
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
-  databaseURL: "https://b52-driver.firebaseio.com"
+  databaseURL: "https://devvcar.firebaseio.com"
 });
 
 const convertPayload = ({ title, body, data }) => {
