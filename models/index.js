@@ -22,7 +22,7 @@ const sequelize = new Sequelize(config.database.DATABASENAME, config.database.US
     define: {
         underscored: false,
         freezeTableName: false,
-        charset: 'utf8mb4',
+        charset: 'utf8',
         dialectOptions: {
           collate: 'utf8_general_ci'
         },
