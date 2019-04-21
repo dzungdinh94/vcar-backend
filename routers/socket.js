@@ -83,6 +83,7 @@ module.exports.pushOrderToDriver = (dataSend) => {
   ).then(data => {
     // let fcmIds = ['dR3zxnz4FZw:APA91bFF_ukJ6ljYkZSt-o8_6pjfvzLdF4GEpBPz4tqySesCUkKvkOv95eAYYA0d1X3PtrmABp7v7zxrtolNURdh814dGrvyXPwjT4wj-zxluxCMb7qUGYJd9_vkZ7Zzo5pexXn1xq5f']
     let fcmIds = []
+    console.log(data,"data in driver");
     data.map(v => {
       console.log('driver-----------fcm', v)
       if (!!driverOnline[v.fcmId]) {
