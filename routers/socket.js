@@ -85,9 +85,9 @@ module.exports.pushOrderToDriver = (dataSend) => {
     let fcmIds = []
     console.log(data,"data in driver");
     data.map(v => {
-      console.log('driver-----------fcm', v)
+      // console.log('driver-----------fcm', v)
       if (!!driverOnline[v.fcmId]) {
-        console.log('sk to', driverOnline[v.fcmId])
+        // console.log('sk to', driverOnline[v.fcmId])
         ioThis.of('/mobile').to(driverOnline[v.fcmId]).emit('neworder', dataSend);
       }
       else fcmIds.push(v.fcmId)
