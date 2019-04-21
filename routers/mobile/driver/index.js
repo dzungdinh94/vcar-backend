@@ -89,8 +89,8 @@ router.post('/near', jsonParser, (req, res, next) => {
   let { lat, long } = req.body
   models.Driver.findAll({
     where: {
-      // status: 1,
-      // [Sequelize.literal]: Sequelize.literal(`dictanceKM( ${lat || 0}, ${long || 0}, latitude, longitude ) < 50 `)
+      status: 1,
+      [Sequelize.literal]: Sequelize.literal(`dictanceKM( ${lat || 0}, ${long || 0}, latitude, longitude ) < 50 `)
     },
     attributes: ['id', 'username', 'phone', 'fullname', 'avatar', 'type', 'numberCar', 'status', 'latitude', 'longitude', 'typeCarId']
   }).then(data => {
