@@ -76,9 +76,9 @@ module.exports.pushOrderToDriver = (dataSend) => {
     `SELECT fcm.fcmId FROM FcmIds AS fcm 
     INNER JOIN Drivers AS dr ON fcm.userId = dr.id 
     WHERE fcm.type = ${config.userType.driver} 
-    AND dr.typeCarId = ${dataSend.typeCarId}`,
-    // AND dr.isOnline = 1 
-    // AND dictanceKM( ${dataSend.fromLat || 0}, ${dataSend.fromLog || 0}, dr.latitude, dr.longitude ) < 50 `,
+    AND dr.typeCarId = ${dataSend.typeCarId}
+    AND dr.isOnline = 1 
+    AND dictanceKM( ${dataSend.fromLat || 0}, ${dataSend.fromLog || 0}, dr.latitude, dr.longitude ) < 50 `,
     { replacements: [], type: models.sequelize.QueryTypes.SELECT }
   ).then(data => {
     // let fcmIds = ['dR3zxnz4FZw:APA91bFF_ukJ6ljYkZSt-o8_6pjfvzLdF4GEpBPz4tqySesCUkKvkOv95eAYYA0d1X3PtrmABp7v7zxrtolNURdh814dGrvyXPwjT4wj-zxluxCMb7qUGYJd9_vkZ7Zzo5pexXn1xq5f']
@@ -103,7 +103,7 @@ module.exports.pushOrderToDriver = (dataSend) => {
     })
   }).catch((err) => {
     cf.wirtelog(err, module.filename)
-    // cf.sendData(res, 'ERROR', 'ERROR', err)
+    cf.sendData(res, 'ERROR', 'ERROR', err)
   });
 }
 
@@ -130,7 +130,7 @@ module.exports.pushVoteToDriver = (dataSend) => {
     })
   }).catch((err) => {
     cf.wirtelog(err, module.filename)
-    // cf.sendData(res, 'ERROR', 'ERROR', err)
+    cf.sendData(res, 'ERROR', 'ERROR', err)
   });
 }
 
@@ -197,6 +197,6 @@ module.exports.pushOrderAcceptedToUser = (dataSend, event, body) => {
     })
   }).catch((err) => {
     cf.wirtelog(err, module.filename)
-    // cf.sendData(res, 'ERROR', 'ERROR', err)
+    cf.sendData(res, 'ERROR', 'ERROR', err)
   });
 }
