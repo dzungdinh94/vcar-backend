@@ -107,7 +107,7 @@ router.post('/create', jsonParser, async (req, res, next) => {
       name: v.name
     })))
     let dataSend = data.toJSON();
-    console.log(dataSend);
+    console.log(data,"data send");
     dataSend.total = parseInt(dataSend.price) + [...arrSvA].reduce((pV, cV) => pV + parseInt(cV.price || 0), 0);
     socket.pushOrderToDriver({ ...dataSend, serviceAttach: JSON.stringify(arrSvA) })
     cf.sendData(res, 'SUCCESS', 'SUCCESS', data) //ERROR
