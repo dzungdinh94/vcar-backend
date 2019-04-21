@@ -7,8 +7,8 @@ module.exports = {
   algorithm: 'aes256',
   cryptoKey: 'B>x2.6BQ:G-HW,><',
   database: {
-    USER: 'root',
-    PASSWORD: 'motconvit',
+    USER: 'vcar',
+    PASSWORD: 'Motconvit01@',
     DATABASENAME: 'dulich',
     HOST: 'localhost',
     PORT: 3306,
