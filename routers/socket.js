@@ -110,24 +110,32 @@ module.exports.pushOrderToDriver = (dataSend) => {
         }
         if(dataFilter.length > 0){
           // console.log(dataFilter,"hihi");
-          if(dataFilter.id == data2.userId){
-            console.log(data2)
-            let fcmIds = []
-            data2.map(v => {
-                if (!!driverOnline[v.fcmId]) {
-                  ioThis.of('/mobile').to(driverOnline[v.fcmId]).emit('neworder', dataSend);
+          var fcmIds = []
+          dataFilter.map((item2,index) => {
+// console.log(item2,"kaka");
+            // if(dataFilter.id == data2.userId){
+              // console.log(data2)
+             
+              data2.map(v => {
+                if(item2.id == v.userId){
+                  console.log(v.userId,"id hihi")
+                  if (!!driverOnline[v.fcmId]) {
+                    ioThis.of('/mobile').to(driverOnline[v.fcmId]).emit('neworder', dataSend);
+                  }else fcmIds.push(v.fcmId)
                 }
-                else fcmIds.push(v.fcmId)
-              })
-              if (!!fcmIds.length) cfNoty.pushNotiWithFcmId({
-                fcmIds,
-                data: { ...dataSend, typeNoti: 'neworder' },
-                title: 'Thông báo',
-                body: 'Có một đơn hàng mới ở gần vị trí của bạn',
-              }, (err, data) => {
-                if (err) cf.wirtelog(err, module.filename)
-              })
-          }
+                })
+               
+            // }
+          })
+          // console.log(fcmIds,"fcmId");
+          if (!!fcmIds.length) cfNoty.pushNotiWithFcmId({
+            fcmIds,
+            data: { ...dataSend, typeNoti: 'neworder' },
+            title: 'Thông báo',
+            body: 'Có một đơn hàng mới ở gần vị trí của bạn',
+          }, (err, data) => {
+            if (err) cf.wirtelog(err, module.filename)
+          })
         }
     }
       ).catch(err =>console.log(err))
