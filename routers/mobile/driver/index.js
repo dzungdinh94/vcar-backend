@@ -12,7 +12,7 @@ const Encrypt = require('../../../helpers/Encryption')
 const Sequelize = require('sequelize');
 const Op = Sequelize.Op;
 const jwt = require('jsonwebtoken')
-
+var GeoPoint = require('geopoint');
 
 //../routeName
 router.use(cors());
@@ -86,15 +86,32 @@ router.post('/signin', jsonParser, (req, res, next) => {
 })
 
 router.post('/near', jsonParser, (req, res, next) => {
-  let { lat, long } = req.body
+  var { lat, log } = req.body
+ 
   models.Driver.findAll({
     where: {
       status: 1,
-      [Sequelize.literal]: Sequelize.literal(`dictanceKM( ${lat || 0}, ${long || 0}, latitude, longitude ) < 50 `)
+      // [Sequelize.literal]: Sequelize.literal(`dictanceKM( ${lat || 0}, ${long || 0}, latitude, longitude ) < 50 `)
     },
     attributes: ['id', 'username', 'phone', 'fullname', 'avatar', 'type', 'numberCar', 'status', 'latitude', 'longitude', 'typeCarId']
   }).then(data => {
-    cf.sendData(res, 'SUCCESS', 'SUCCESS', data)
+    var dataFilter = [];
+   if(data.length > 0){
+     data.map((item,index) => {
+       if(item.latitude !== null || item.longitude !== null){
+        var point1 = new GeoPoint(lat, log)
+        var point2 = new GeoPoint(item.latitude, item.longitude)
+        var distance = point1.distanceTo(point2, true)
+       if(distance < 6){
+       dataFilter.push(item)
+       }
+       }
+       return dataFilter;
+     })
+   }
+  //  console.log(dataFilter,"data filter");
+   return cf.sendData(res, 'SUCCESS', 'SUCCESS', dataFilter)
+
   }).catch((err) => {
     cf.wirtelog(err, module.filename)
     cf.sendData(res, 'ERROR', 'ERROR', err)

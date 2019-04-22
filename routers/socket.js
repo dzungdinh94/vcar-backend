@@ -8,6 +8,8 @@ const Sequelize = require('sequelize');
 const Op = Sequelize.Op;
 const driverOnline = {}
 const userOnline = {}
+var GeoPoint = require('geopoint');
+
 let ioThis
 
 module.exports.config = (io) => {
@@ -72,40 +74,96 @@ module.exports.config = (io) => {
   });
 }
 module.exports.pushOrderToDriver = (dataSend) => {
-  models.sequelize.query(
-    `SELECT fcm.fcmId FROM FcmIds AS fcm 
-    INNER JOIN Drivers AS dr ON fcm.userId = dr.id 
-    WHERE fcm.type = ${config.userType.driver} 
-    AND dr.typeCarId = ${dataSend.typeCarId}
-    AND dr.isOnline = 1 
-    AND dictanceKM( ${dataSend.fromLat || 0}, ${dataSend.fromLog || 0}, dr.latitude, dr.longitude ) < 50 `,
-    { replacements: [], type: models.sequelize.QueryTypes.SELECT }
-  ).then(data => {
-    // let fcmIds = ['dR3zxnz4FZw:APA91bFF_ukJ6ljYkZSt-o8_6pjfvzLdF4GEpBPz4tqySesCUkKvkOv95eAYYA0d1X3PtrmABp7v7zxrtolNURdh814dGrvyXPwjT4wj-zxluxCMb7qUGYJd9_vkZ7Zzo5pexXn1xq5f']
-    let fcmIds = []
-    console.log(data,"data in driver");
-    data.map(v => {
-      // console.log('driver-----------fcm', v)
-      if (!!driverOnline[v.fcmId]) {
-        // console.log('sk to', driverOnline[v.fcmId])
-        ioThis.of('/mobile').to(driverOnline[v.fcmId]).emit('neworder', dataSend);
-      }
-      else fcmIds.push(v.fcmId)
-    })
-    // ioThis.emit('neworder', dataSend);
-    if (!!fcmIds.length) cfNoty.pushNotiWithFcmId({
-      fcmIds,
-      data: { ...dataSend, typeNoti: 'neworder' },
-      title: 'Thông báo',
-      body: 'Có một đơn hàng mới ở gần vị trí của bạn',
-    }, (err, data) => {
-      console.log(err)
-      if (err) cf.wirtelog(err, module.filename)
-    })
+  console.log(dataSend.fromLat,"data send");
+  models.Driver.findAll({
+    where: {
+      status: 1,
+      isOnline:1,
+      typeCarId:dataSend.typeCarId
+      // [Sequelize.literal]: Sequelize.literal(`dictanceKM( ${lat || 0}, ${long || 0}, fromLat, fromLog ) < 50 `)
+    },
+    order: [['createdAt', 'DESC']],
+    raw: true
+  }).then(data1 => {
+    models.FcmId.findAll({
+      where: {
+        type:config.userType.driver
+        // [Sequelize.literal]: Sequelize.literal(`dictanceKM( ${lat || 0}, ${long || 0}, fromLat, fromLog ) < 50 `)
+      },
+      order: [['createdAt', 'DESC']],
+      raw: true
+    }).then(data2 => 
+      {
+        var dataFilter = [];
+        if(data1.length > 0){
+          data1.map((item,index) => {
+            if(item.latitude !== null || item.longitude !== null){
+              var point1 = new GeoPoint(dataSend.fromLat, dataSend.fromLog)
+              var point2 = new GeoPoint(item.latitude, item.longitude)
+              var distance = point1.distanceTo(point2, true)
+             if(distance < 6){
+             dataFilter.push(item)
+             }
+             }
+             return dataFilter;
+          })
+        }
+        if(dataFilter.length > 0){
+          // console.log(dataFilter,"hihi");
+          if(dataFilter.id == data2.userId){
+            console.log(data2)
+            let fcmIds = []
+            data2.map(v => {
+                if (!!driverOnline[v.fcmId]) {
+                  ioThis.of('/mobile').to(driverOnline[v.fcmId]).emit('neworder', dataSend);
+                }
+                else fcmIds.push(v.fcmId)
+              })
+              if (!!fcmIds.length) cfNoty.pushNotiWithFcmId({
+                fcmIds,
+                data: { ...dataSend, typeNoti: 'neworder' },
+                title: 'Thông báo',
+                body: 'Có một đơn hàng mới ở gần vị trí của bạn',
+              }, (err, data) => {
+                if (err) cf.wirtelog(err, module.filename)
+              })
+          }
+        }
+    }
+      ).catch(err =>console.log(err))
   }).catch((err) => {
     cf.wirtelog(err, module.filename)
     cf.sendData(res, 'ERROR', 'ERROR', err)
   });
+
+  // models.sequelize.query(
+  //   `SELECT fcm.fcmId FROM FcmIds AS fcm 
+  //   INNER JOIN Drivers AS dr ON fcm.userId = dr.id 
+  //   WHERE fcm.type = ${config.userType.driver} 
+  //   AND dr.typeCarId = ${dataSend.typeCarId}
+  //   AND dr.isOnline = 1 
+  //   AND dictanceKM( ${dataSend.fromLat || 0}, ${dataSend.fromLog || 0}, dr.latitude, dr.longitude ) < 50 `,
+  //   { replacements: [], type: models.sequelize.QueryTypes.SELECT }
+  // ).then(data => {
+  //   let fcmIds = []
+  //   data.map(v => {
+  //     if (!!driverOnline[v.fcmId]) {
+  //       ioThis.of('/mobile').to(driverOnline[v.fcmId]).emit('neworder', dataSend);
+  //     }
+  //     else fcmIds.push(v.fcmId)
+  //   })
+  //   if (!!fcmIds.length) cfNoty.pushNotiWithFcmId({
+  //     fcmIds,
+  //     data: { ...dataSend, typeNoti: 'neworder' },
+  //     title: 'Thông báo',
+  //     body: 'Có một đơn hàng mới ở gần vị trí của bạn',
+  //   }, (err, data) => {
+  //     if (err) cf.wirtelog(err, module.filename)
+  //   })
+  // }).catch((err) => {
+  //   cf.wirtelog(err, module.filename)
+  //   cf.sendData(res, 'ERROR', 'ERROR', err)
+  // });
 }
 
 module.exports.pushVoteToDriver = (dataSend) => {

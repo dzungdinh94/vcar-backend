@@ -1,3 +1,4 @@
+var env = "server"
 module.exports = {
   AppName: 'MrCoh',
   PORT: 3000,
@@ -10,7 +11,7 @@ module.exports = {
     USER: 'vcar',
     PASSWORD: 'Motconvit01@',
     DATABASENAME: 'dulich',
-    HOST: 'localhost',
+    HOST: env === "server"?'localhost':'139.162.50.22',
     PORT: 3306,
     DIALECT: 'mysql'
   },

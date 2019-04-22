@@ -16,6 +16,7 @@
     "express": "^4.15.4",
     "express-sequelize": "0.0.4",
     "firebase-admin": "^5.2.1",
+    "geopoint": "^1.0.1",
     "jsonwebtoken": "^7.4.3",
     "lodash": "^4.17.4",
     "moment": "^2.22.2",
