@@ -116,16 +116,23 @@ module.exports.pushOrderToDriver = (dataSend) => {
 
             // if(dataFilter.id == data2.userId){
               // console.log(data2)
-             
+              // models.Order.update(
+              //       { status:1 },
+              //       { where: { id:dataSend.id } }
+              //     ).then(data => {
+              //       cf.sendData(res, 'SUCCESS', 'SUCCESS', data) //ERROR
+              //     }).catch((err) => {
+              //       cf.sendData(res, 'ERROR', 'ERROR', err) //ERROR
+              //     });
               data2.map(v => {
                 if(item2.id == v.userId){
                    console.log(driverOnline,"id hihi")
                   if (!!driverOnline[v.fcmId]) {
                    console.log("Da vao day");
-                   console.log(driverOnline[v.fcmId]);
+                   console.log(driverOnline);
                    
 
-                    // ioThis.of('/mobile').to(driverOnline[v.fcmId]).emit('neworder', dataSend);
+                    ioThis.of('/mobile').to(driverOnline[v.fcmId]).emit('neworder', dataSend);
                   }else fcmIds.push(v.fcmId)
                 }
                 })
@@ -133,14 +140,14 @@ module.exports.pushOrderToDriver = (dataSend) => {
             // }
           })
           // console.log(fcmIds,"fcmId");
-          // if (!!fcmIds.length) cfNoty.pushNotiWithFcmId({
-          //   fcmIds,
-          //   data: { ...dataSend, typeNoti: 'neworder' },
-          //   title: 'Thông báo',
-          //   body: 'Có một đơn hàng mới ở gần vị trí của bạn',
-          // }, (err, data) => {
-          //   if (err) cf.wirtelog(err, module.filename)
-          // })
+          if (!!fcmIds.length) cfNoty.pushNotiWithFcmId({
+            fcmIds,
+            data: { ...dataSend, typeNoti: 'neworder' },
+            title: 'Thông báo',
+            body: 'Có một đơn hàng mới ở gần vị trí của bạn',
+          }, (err, data) => {
+            if (err) cf.wirtelog(err, module.filename)
+          })
         }
     }
       ).catch(err =>console.log(err))
@@ -148,7 +155,7 @@ module.exports.pushOrderToDriver = (dataSend) => {
     cf.wirtelog(err, module.filename)
     cf.sendData(res, 'ERROR', 'ERROR', err)
   });
-
+}
   // models.sequelize.query(
   //   `SELECT fcm.fcmId FROM FcmIds AS fcm 
   //   INNER JOIN Drivers AS dr ON fcm.userId = dr.id 
@@ -177,7 +184,7 @@ module.exports.pushOrderToDriver = (dataSend) => {
   //   cf.wirtelog(err, module.filename)
   //   cf.sendData(res, 'ERROR', 'ERROR', err)
   // });
-}
+
 
 module.exports.pushVoteToDriver = (dataSend) => {
   models.FcmId.findAll({
