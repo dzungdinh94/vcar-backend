@@ -14,15 +14,15 @@ let ioThis
 
 module.exports.config = (io) => {
   ioThis = io
-  io.of('/mobile').use((socket, next) => {
-    console.log("socket da nhan duoc")
-    let { token, fcmId } = socket.handshake.query
-    AuthMiddeWare.verifyMobileSocket(token, (err, data) => {
-      if (err) return next(err);
-      socket.user = { ...data, fcmId }
-      next();
-    })
-  });
+  // io.of('/mobile').use((socket, next) => {
+  //   console.log("socket da nhan duoc")
+  //   let { token, fcmId } = socket.handshake.query
+  //   AuthMiddeWare.verifyMobileSocket(token, (err, data) => {
+  //     if (err) return next(err);
+  //     socket.user = { ...data, fcmId }
+  //     next();
+  //   })
+  // });
   io.of('/mobile').on('connection', (socket) => {
     console.log('socket connection hii', socket.user)
     let { token, fcmId } = socket.handshake.query
