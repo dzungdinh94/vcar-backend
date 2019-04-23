@@ -14,15 +14,15 @@ let ioThis
 
 module.exports.config = (io) => {
   ioThis = io
-  // io.of('/mobile').use((socket, next) => {
-  //   console.log("socket da nhan duoc")
-  //   let { token, fcmId } = socket.handshake.query
-  //   AuthMiddeWare.verifyMobileSocket(token, (err, data) => {
-  //     if (err) return next(err);
-  //     socket.user = { ...data, fcmId }
-  //     next();
-  //   })
-  // });
+  io.of('/mobile').use((socket, next) => {
+    console.log("socket da nhan duoc")
+    let { token, fcmId } = socket.handshake.query
+    AuthMiddeWare.verifyMobileSocket(token, (err, data) => {
+      if (err) return next(err);
+      socket.user = { ...data, fcmId }
+      next();
+    })
+  });
   io.of('/mobile').on('connection', (socket) => {
     console.log('socket connection hii', socket.user)
     let { token, fcmId } = socket.handshake.query
@@ -133,14 +133,14 @@ module.exports.pushOrderToDriver = (dataSend) => {
             // }
           })
           // console.log(fcmIds,"fcmId");
-          if (!!fcmIds.length) cfNoty.pushNotiWithFcmId({
-            fcmIds,
-            data: { ...dataSend, typeNoti: 'neworder' },
-            title: 'Thông báo',
-            body: 'Có một đơn hàng mới ở gần vị trí của bạn',
-          }, (err, data) => {
-            if (err) cf.wirtelog(err, module.filename)
-          })
+          // if (!!fcmIds.length) cfNoty.pushNotiWithFcmId({
+          //   fcmIds,
+          //   data: { ...dataSend, typeNoti: 'neworder' },
+          //   title: 'Thông báo',
+          //   body: 'Có một đơn hàng mới ở gần vị trí của bạn',
+          // }, (err, data) => {
+          //   if (err) cf.wirtelog(err, module.filename)
+          // })
         }
     }
       ).catch(err =>console.log(err))
