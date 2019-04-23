@@ -122,7 +122,7 @@ module.exports.pushOrderToDriver = (dataSend) => {
                    console.log(driverOnline,"id hihi")
                   if (!!driverOnline[v.fcmId]) {
                    console.log("Da vao day");
-                   console.log(driverOnline[]);
+                   console.log(driverOnline[v.fcmId]);
                    
 
                     ioThis.of('/mobile').to(driverOnline[v.fcmId]).emit('neworder', dataSend);
