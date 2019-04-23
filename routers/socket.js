@@ -15,6 +15,7 @@ let ioThis
 module.exports.config = (io) => {
   ioThis = io
   io.of('/mobile').use((socket, next) => {
+    console.log("socket da nhan duoc")
     let { token, fcmId } = socket.handshake.query
     AuthMiddeWare.verifyMobileSocket(token, (err, data) => {
       if (err) return next(err);
@@ -23,11 +24,11 @@ module.exports.config = (io) => {
     })
   });
   io.of('/mobile').on('connection', (socket) => {
-    console.log('connection', socket.user)
+    console.log('socket connection hii', socket.user)
     let { token, fcmId } = socket.handshake.query
 
     if (socket.user.userType == config.userType.user) {
-      userOnline[socket.user.fcmId] = socket.id;
+      userOnline[fcmId] = socket.id;
       setTimeout(() => {
         console.log('------------user', userOnline)
       }, 3000);
@@ -35,7 +36,7 @@ module.exports.config = (io) => {
 
     };
     if (socket.user.userType == config.userType.driver) {
-      driverOnline[socket.user.fcmId] = socket.id
+      driverOnline[fcmId] = socket.id
       console.log('driver', driverOnline)
       socket.join('roomdriver', () => { })
 
@@ -112,14 +113,16 @@ module.exports.pushOrderToDriver = (dataSend) => {
           // console.log(dataFilter,"hihi");
           var fcmIds = []
           dataFilter.map((item2,index) => {
-// console.log(item2,"kaka");
+
             // if(dataFilter.id == data2.userId){
               // console.log(data2)
              
               data2.map(v => {
                 if(item2.id == v.userId){
-                  console.log(v.userId,"id hihi")
+                   console.log(driverOnline,"id hihi")
                   if (!!driverOnline[v.fcmId]) {
+                   
+
                     ioThis.of('/mobile').to(driverOnline[v.fcmId]).emit('neworder', dataSend);
                   }else fcmIds.push(v.fcmId)
                 }
