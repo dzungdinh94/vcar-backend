@@ -114,41 +114,50 @@ module.exports.pushOrderToDriver = (dataSend) => {
         if(dataFilter.length > 0){
           // console.log(dataFilter,"hihi");
           var fcmIds = []
+          var driverIds = [];
           dataFilter.map((item2,index) => {
-
-            // if(dataFilter.id == data2.userId){
-              // console.log(data2)
-              // models.Order.update(
-              //       { status:1 },
-              //       { where: { id:dataSend.id } }
-              //     ).then(data => {
-              //       cf.sendData(res, 'SUCCESS', 'SUCCESS', data) //ERROR
-              //     }).catch((err) => {
-              //       cf.sendData(res, 'ERROR', 'ERROR', err) //ERROR
-              //     });
+            driverIds.push(item2.id)
+            if(dataFilter.id == data2.userId){
+              console.log(data2)
+             
               data2.map(v => {
                 if(item2.id == v.userId){
                   //  console.log(driverOnline,"id hihi")
-                  if (!!driverOnline[v.fcmId]) {
-                   console.log("Da vao day",dataSend);
-                   console.log(driverOnline[v.fcmId],"socket Id ban");
+                  // if (!!driverOnline[v.fcmId]) {
+                  //  console.log("Da vao day",dataSend);
+                  //  console.log(driverOnline[v.fcmId],"socket Id ban");
                    
 
-                    ioThis.of('/mobile').to(driverOnline[v.fcmId]).emit('neworder', dataSend);
-                  }else fcmIds.push(v.fcmId)
+                  //   ioThis.of('/mobile').to(driverOnline[v.fcmId]).emit('neworder', dataSend);
+                  // }else 
+                  
+                  fcmIds.push(v.fcmId)
                 }
                 })
                
-            // }
+            }
           })
-          // console.log(fcmIds,"fcmId");
+          if(driverIds.length > 0){
+            models.Order.update(
+              { driverId:driverIds.toString() },
+              { where: { id:dataSend.id } }
+            ).then(data => {
+              // cf.sendData(res, 'SUCCESS', 'SUCCESS', data) //ERROR
+              console.log(data,"data day kaka")
+            }).catch((err) => {
+              // cf.sendData(res, 'ERROR', 'ERROR', err) //ERROR
+              console.log(err)
+            });
+          }
+          
+          console.log(fcmIds,"fcmId");
           if (!!fcmIds.length) cfNoty.pushNotiWithFcmId({
             fcmIds,
             data: { ...dataSend, typeNoti: 'neworder' },
             title: 'Thông báo',
             body: 'Có một đơn hàng mới ở gần vị trí của bạn',
           }, (err, data) => {
-            if (err) cf.wirtelog(err, module.filename)
+            if (err) console.log(err)
           })
         }
     }

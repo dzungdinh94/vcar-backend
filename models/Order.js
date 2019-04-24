@@ -17,5 +17,6 @@ module.exports = (sequelize, DataTypes) => sequelize.define(
     timeStart: { type: DataTypes.DATE, defaultValue: DataTypes.NOW },
     type: { type: DataTypes.INTEGER, defaultValue: 0 },
     status: { type: DataTypes.INTEGER, defaultValue: 0 }, // 0 vừa tạo , 1 được chấp nhận , 2 đã được nhận , 3 user đã xóa , 4 hoàn  thành
+    driverId:DataTypes.STRING,
   }
 );
