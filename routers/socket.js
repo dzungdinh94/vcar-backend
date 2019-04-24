@@ -76,8 +76,8 @@ module.exports.config = (io) => {
   });
 }
 module.exports.pushOrderToDriver = (dataSend) => {
-  console.log(SocketIds,"SocketIds");
-  ioThis.of('/mobile').to(SocketIds.length >0 && SocketIds[0]).emit('neworder', dataSend);
+  // console.log(SocketIds,"SocketIds");
+  // ioThis.of('/mobile').to(SocketIds.length >0 && SocketIds[0]).emit('neworder', dataSend);
   models.Driver.findAll({
     where: {
       status: 1,
@@ -108,9 +108,13 @@ module.exports.pushOrderToDriver = (dataSend) => {
              dataFilter.push(item)
              }
              }
-             return dataFilter;
+            
           })
         }
+        return {dataFilter,data2};
+       
+    }
+      ).then(({dataFilter,data2}) => {
         if(dataFilter.length > 0){
           // console.log(dataFilter,"hihi");
           var fcmIds = []
@@ -137,31 +141,35 @@ module.exports.pushOrderToDriver = (dataSend) => {
                
             }
           })
-          if(driverIds.length > 0){
-            models.Order.update(
-              { driverId:driverIds.toString() },
-              { where: { id:dataSend.id } }
-            ).then(data => {
-              // cf.sendData(res, 'SUCCESS', 'SUCCESS', data) //ERROR
-              console.log(data,"data day kaka")
-            }).catch((err) => {
-              // cf.sendData(res, 'ERROR', 'ERROR', err) //ERROR
-              console.log(err)
-            });
-          }
-          
-          console.log(fcmIds,"fcmId");
-          if (!!fcmIds.length) cfNoty.pushNotiWithFcmId({
-            fcmIds,
-            data: { ...dataSend, typeNoti: 'neworder' },
-            title: 'Thông báo',
-            body: 'Có một đơn hàng mới ở gần vị trí của bạn',
-          }, (err, data) => {
-            if (err) console.log(err)
-          })
+          return {fcmIds,driverIds}
         }
-    }
-      ).catch(err =>console.log(err))
+         
+        
+      }).then(dataOfDiver => {
+        if(dataOfDiver.driverIds.length > 0){
+          models.Order.update(
+            { driverId:dataOfDiver.driverIds.toString() },
+            { where: { id:dataSend.id } }
+          ).then(data => {
+            // cf.sendData(res, 'SUCCESS', 'SUCCESS', data) //ERROR
+            console.log(data,"data day kaka")
+          }).catch((err) => {
+            // cf.sendData(res, 'ERROR', 'ERROR', err) //ERROR
+            console.log(err)
+          });
+        }
+        
+        // console.log(fcmIds,"fcmId");
+        if (!!dataOfDiver.fcmIds.length) cfNoty.pushNotiWithFcmId({
+          fcmIds:dataOfDiver.fcmIds,
+          data: { ...dataSend, typeNoti: 'neworder' },
+          title: 'Thông báo',
+          body: 'Có một đơn hàng mới ở gần vị trí của bạn',
+        }, (err, data) => {
+          if (err) console.log(err)
+        })
+      })
+      .catch(err =>console.log(err))
   }).catch((err) => {
     cf.wirtelog(err, module.filename)
     cf.sendData(res, 'ERROR', 'ERROR', err)

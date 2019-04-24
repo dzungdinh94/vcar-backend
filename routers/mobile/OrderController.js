@@ -97,7 +97,8 @@ router.post('/create', jsonParser, async (req, res, next) => {
     duration,
     userId: id,
     status: 1,
-    price: price
+    price: price,
+    driverId:0
   }).then(async data => {
     let arrSvA = await Promise.all([...serviceAttach].map((v, k) => models.ServiceAttachOrder.create({
       serviceAttachId: v.id,
