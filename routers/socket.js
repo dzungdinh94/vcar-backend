@@ -9,7 +9,7 @@ const Op = Sequelize.Op;
 const driverOnline = {}
 const userOnline = {}
 var GeoPoint = require('geopoint');
-
+var SocketIds = [];
 let ioThis
 
 module.exports.config = (io) => {
@@ -26,7 +26,8 @@ module.exports.config = (io) => {
   io.of('/mobile').on('connection', (socket) => {
     console.log('socket connection hii', socket.user)
     let { token, fcmId } = socket.handshake.query
-    socket.of("/mobile").to(socket.id).emit("neworder");
+    let data  = SocketIds.push(socket.id);
+    console.log(data,"test data");
     if (socket.user.userType == config.userType.user) {
       userOnline[fcmId] = socket.id;
       setTimeout(() => {
@@ -75,7 +76,8 @@ module.exports.config = (io) => {
   });
 }
 module.exports.pushOrderToDriver = (dataSend) => {
-  console.log(dataSend.fromLat,"data send");
+  console.log(SocketIds,"SocketIds");
+  ioThis.of('/mobile').to(SocketIds.length >0 && SocketIds[0]).emit('neworder', dataSend);
   models.Driver.findAll({
     where: {
       status: 1,
