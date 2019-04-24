@@ -132,7 +132,7 @@ module.exports.pushOrderToDriver = (dataSend) => {
                    console.log(driverOnline[v.fcmId],"socket Id ban");
                    
 
-                    ioThis.of('/mobile').emit('neworder', dataSend);
+                    ioThis.of('/mobile').to(driverOnline[v.fcmId]).emit('neworder', dataSend);
                   }else fcmIds.push(v.fcmId)
                 }
                 })
