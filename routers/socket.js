@@ -126,13 +126,13 @@ module.exports.pushOrderToDriver = (dataSend) => {
               //     });
               data2.map(v => {
                 if(item2.id == v.userId){
-                   console.log(driverOnline,"id hihi")
+                  //  console.log(driverOnline,"id hihi")
                   if (!!driverOnline[v.fcmId]) {
-                   console.log("Da vao day");
-                   console.log(driverOnline);
+                   console.log("Da vao day",dataSend);
+                   console.log(driverOnline[v.fcmId],"socket Id ban");
                    
 
-                    ioThis.of('/mobile').to(driverOnline[v.fcmId]).emit('neworder', dataSend);
+                    ioThis.of('/mobile').emit('neworder', dataSend);
                   }else fcmIds.push(v.fcmId)
                 }
                 })
