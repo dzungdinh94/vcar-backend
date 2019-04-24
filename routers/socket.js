@@ -26,7 +26,7 @@ module.exports.config = (io) => {
   io.of('/mobile').on('connection', (socket) => {
     console.log('socket connection hii', socket.user)
     let { token, fcmId } = socket.handshake.query
-
+    socket.of("/mobile").to(socket.id).emit("neworder");
     if (socket.user.userType == config.userType.user) {
       userOnline[fcmId] = socket.id;
       setTimeout(() => {
