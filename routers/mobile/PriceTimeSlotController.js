@@ -30,9 +30,9 @@ router.post('/getall', jsonParser, (req, res, next) => {
     if(data.length > 0){
       data.map((item,index) => {
         if(item.startTime <= time && item.endTime >= time){
-          item.price = Math.round(item.price * distance/1000)*1000
+          item.price = Math.round(item.price * converKm/1000)*1000
         }else{
-          item.price = Math.round(8000 * distance/1000)*1000
+          item.price = Math.round(8000 * converKm/1000)*1000
         }
          
         //  console.log(," item.price hihi");
