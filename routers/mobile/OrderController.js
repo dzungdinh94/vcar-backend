@@ -61,7 +61,7 @@ router.post('/create', jsonParser, async (req, res, next) => {
     toLocation, description,
     long, fromLat, fromLog,
     toLat, toLog,
-    serviceAttach, duration } = req.body
+    serviceAttach, duration,infoPrice } = req.body
   if (userType != config.userType.user) return cf.sendData(res, 'ERROR', 'Lái xe không tạo được đơn hàng');
   if (
     !typeCarId
@@ -73,16 +73,25 @@ router.post('/create', jsonParser, async (req, res, next) => {
     || !toLat
     || !toLog
   ) return cf.sendData(res, 'ERROR', 'Điền đầy đủ thông tin');
+   
+  var price = 1
+    if(infoPrice.length > 0 && typeCarId){
+      infoPrice.map((item,index) => {
+        if(item.typeCarId == typeCarId){
+          price=item.price
+        }
+      })
+    }
+    console.log(price,"price hihi");
+  // let price = 1
 
-  let price = 1
+  // try {
+  //   price = await getPrice({ typeCarId, long })
 
-  try {
-    price = await getPrice({ typeCarId, long })
-
-  } catch (err) {
-    cf.wirtelog(err, module.filename)
-    cf.sendData(res, 'ERROR', 'ERROR', err) //ERROR
-  }
+  // } catch (err) {
+  //   cf.wirtelog(err, module.filename)
+  //   cf.sendData(res, 'ERROR', 'ERROR', err) //ERROR
+  // }
 
   models.Order.create({
     typeCarId,
