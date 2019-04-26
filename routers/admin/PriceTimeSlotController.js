@@ -38,6 +38,8 @@ router.post('/getall', jsonParser, (req, res, next) => {
     // attributes: ['id', 'email', 'phone', 'avatar', 'fullname']
   }).then(data => {
     let { count, rows } = data
+    console.log(data,"data price");
+    console.log("ahihi");
     cf.sendData(res, 'SUCCESS', 'SUCCESS', { totalPage: Math.ceil(count / config.pageLimit), rows }) //ERROR
   }).catch((err) => {
     cf.wirtelog(err, module.filename)

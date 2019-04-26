@@ -160,6 +160,7 @@ module.exports.pushOrderToDriver = (dataSend) => {
         }
         
         // console.log(fcmIds,"fcmId");
+        console.log(dataOfDiver.fcmIds);
         if (!!dataOfDiver.fcmIds.length) cfNoty.pushNotiWithFcmId({
           fcmIds:dataOfDiver.fcmIds,
           data: { ...dataSend, typeNoti: 'neworder' },
