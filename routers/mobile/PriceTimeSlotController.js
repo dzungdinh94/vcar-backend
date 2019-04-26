@@ -16,6 +16,7 @@ router.post('/getall', jsonParser, (req, res, next) => {
   let { typeCarId, time,distance } = req.body;
   console.log(req.body,"body hihi");
   let objectWhere = {};
+  var converKm = !!distance ? distance/1000 :0
   if (!!typeCarId) objectWhere.typeCarId = typeCarId
   // if (!!time){
   //   objectWhere.startTime = { [Op.lte] : time +':00'}
