@@ -58,9 +58,9 @@ router.post('/login', jsonParser, (req, res, next) => {
 });
 
 router.post('/signin', jsonParser, (req, res, next) => {
-  const { phone, password, fullname, avatar, numberCar, typeCarId } = req.body
+  const { phone, password, fullname, avatar, numberCar, typeCarId,nameCar } = req.body
   console.log(req.body,"body");
-  if (!phone || !password || !fullname || !numberCar || !typeCarId) return cf.sendData(res, 'ERROR', 'Nhập đầy đủ thông tin');
+  if (!phone || !password || !fullname || !numberCar || !typeCarId || !nameCar) return cf.sendData(res, 'ERROR', 'Nhập đầy đủ thông tin');
   models.Driver.findOrCreate({
     where: {
       phone
@@ -73,7 +73,8 @@ router.post('/signin', jsonParser, (req, res, next) => {
       avatar,
       numberCar,
       status: 0,
-      typeCarId
+      typeCarId,
+      nameCar
     }
   }).spread((data, isCreate) => {
     if (!isCreate) return cf.sendData(res, 'ERROR', 'Số điện thoại đã tồn tại trong hệ thống') //ERROR  

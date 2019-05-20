@@ -17,5 +17,6 @@ module.exports = (sequelize, DataTypes) => sequelize.define(
     status: DataTypes.INTEGER,
     isOnline: { type: DataTypes.INTEGER, defaultValue: 1 },
     imgCard: DataTypes.STRING,
+    nameCar:DataTypes.STRING
   }
 );

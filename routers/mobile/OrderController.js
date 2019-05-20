@@ -190,7 +190,7 @@ router.post('/getorder', jsonParser, async (req, res, next) => {
       where: {
         id: id
       },
-      attributes: ['id', 'username', 'phone', 'fullname', 'avatar', 'type', 'numberCar', 'status', 'latitude', 'longitude', 'typeCarId', 'rate'],
+      attributes: ['id', 'username', 'phone', 'fullname', 'avatar', 'type', 'numberCar', 'status', 'latitude', 'longitude', 'typeCarId', 'rate','nameCar'],
       raw: true
     })
 
@@ -356,7 +356,7 @@ router.post('/info', jsonParser, (req, res, next) => {
         where: {
           id: orderDr.driverId
         },
-        attributes: ['id', 'username', 'phone', 'fullname', 'avatar', 'type', 'numberCar', 'status', 'latitude', 'longitude', 'typeCarId', 'rate'],
+        attributes: ['id', 'username', 'phone', 'fullname', 'avatar', 'type', 'numberCar', 'status', 'latitude', 'longitude', 'typeCarId', 'rate','nameCar'],
         raw: true
       })
       data.inforDriver = inforDriver
