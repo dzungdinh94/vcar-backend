@@ -1,4 +1,4 @@
-var env = "dev"
+var env = "server"
 module.exports = {
   AppName: 'MrCoh',
   PORT: 3000,
