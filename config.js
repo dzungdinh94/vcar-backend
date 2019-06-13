@@ -9,9 +9,9 @@ module.exports = {
   cryptoKey: 'B>x2.6BQ:G-HW,><',
   database: {
     USER: 'vcar',
-    PASSWORD: 'Motconvit01@',
+    PASSWORD: 'Vcar123456@',
     DATABASENAME: 'dulich',
-    HOST: env === "server"?'localhost':'139.162.50.22',
+    HOST: env === "server"?'localhost':'128.199.236.30',
     PORT: 3306,
     DIALECT: 'mysql'
   },
