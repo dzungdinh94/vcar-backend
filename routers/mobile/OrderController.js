@@ -331,6 +331,25 @@ router.post('/finish', jsonParser, (req, res, next) => {
 
 })
 
+router.post('/gocar', jsonParser, (req, res, next) => {
+  const { id, fcmId, type, userType } = req.user;
+  let { orderId, rate, driverId } = req.body;
+  if (userType != config.userType.driver) return cf.sendData(res, 'ERROR', 'User không được kêt thúc đơn hàng');
+  models.OrderOfDriver.update(
+    { status: 5, endTime: moment().format('YYYY-MM-DD') },
+    { where: { orderId } }
+  ).then(data => {
+    models.Order.findById(orderId).then(async data => {
+      data.update({ status: 5 })
+      socket.pushOrderGoCarToUser(data.toJSON(), 'gocar', `Bạn đã lên xe, không được phép hủy chuyến !`)
+    })
+    cf.sendData(res, 'SUCCESS', 'SUCCESS', data)
+  }).catch(err => {
+    cf.wirtelog(err, module.filename)
+    cf.sendData(res, 'ERROR', 'ERROR', err)
+  });
+
+})
 
 router.post('/info', jsonParser, (req, res, next) => {
   const { id, fcmId, type, userType } = req.user;
