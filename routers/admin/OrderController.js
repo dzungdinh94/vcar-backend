@@ -19,34 +19,37 @@ router.use('/', (req, res, next) => AuthMiddeWare.verifyAdmin(req, res, next));
 
 
 router.post('/getall', jsonParser, (req, res, next) => {
-  let { page, search } = req.body;
+  let { page, search, status, typeCarId } = req.body;
   page = page || 1;
   page = page - 1
   search = search || '';
+  let objWhere = {}
+  // if (!!typeCarId) objWhere.typeCarId = typeCarId;
+  if (status == "0" || status == "1") objWhere.status = status;
 
-  let sqlGet = `SELECT od.*, odod.driverId, odod.status stdD, dr.phone, dr.fullname, dr.numberCar, urs.phone, urs.fullname `
-  let sqlCount= `SELECT COUNT(od.id) count `
-
-  let sql = `FROM OrderOfDrivers odod
-    LEFT OUTER JOIN Orders od ON odod.orderId = od.id
-    LEFT OUTER  JOIN Drivers dr ON dr.id = odod.driverId
-    INNer JOIN Users usr ON usr.id = od.userId `;
-
-  sqlGet = sqlGet + sql +  `ORDER BY od.id LIMIT ${config.pageLimit} OFFSET ${page * config.pageLimit} `
-  Promise.all([
-    models.sequelize.query(sqlGet, { replacements: ['active'], type: models.sequelize.QueryTypes.SELECT }),
-    models.sequelize.query(sqlCount, { replacements: ['active'], type: models.sequelize.QueryTypes.SELECT }),
-  ]).then(data => {
-    cf.sendData(res, 'SUCCESS', 'SUCCESS', {
-      totalPage: Math.ceil((data[1].count || 0) / config.pageLimit),
-      rows: data[0]
-    })
+  models.Order.findAndCountAll({
+      where: {
+          // status: 1,
+          // ...objWhere,
+          [Op.or]: {
+              // email: { [Op.like]: `%${search}%` },
+              fromLocation: { [Op.like]: `%${search}%` },
+              toLocation: { [Op.like]: `%${search}%` },
+              price: { [Op.like]: `%${search}%` },
+          }
+      },
+      offset: page * config.pageLimit,
+      limit: config.pageLimit,
+      attributes: ['id', 'fromLocation', 'toLocation', 'description', 'status', 'createdAt','price','typeCarId' ],
+      order: [['id', 'DESC']],
+  }).then(data => {
+      let { count, rows } = data
+      cf.sendData(res, 'SUCCESS', 'SUCCESS', { totalPage: Math.ceil(count / config.pageLimit), rows }) //ERROR
   }).catch((err) => {
-    cf.wirtelog(err, module.filename)
-    cf.sendData(res, 'ERROR', 'ERROR', err)
+      cf.wirtelog(err, module.filename)
+      cf.sendData(res, 'ERROR', 'ERROR', err) //ERROR
   });
 });
-
 // router.post('/create', jsonParser, (req, res, next) => {
 //   const { id, fcmId, userType } = req.user;
 //   let { title, content, description, status, type, userId } = req.body
