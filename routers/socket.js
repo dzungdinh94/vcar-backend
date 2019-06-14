@@ -299,3 +299,34 @@ module.exports.pushOrderAcceptedToUser = (dataSend, event, body) => {
     cf.sendData(res, 'ERROR', 'ERROR', err)
   });
 }
+module.exports.pushOrderGoCarToUser = (dataSend, event, body) => {
+  models.FcmId.findAll({
+    where: {
+      userId: dataSend.userId,
+      type: config.userType.user
+    },
+    attributes: ['fcmId'],
+    raw: true
+  }).then(data => {
+    // console.log(event)
+    // console.log(dataSend)
+    let fcmIds = []
+    ioThis.of('/mobile').to('roomuser').emit(event, dataSend);
+    data.map(v => {
+      console.log('user-----------fcm', v)
+      if (!!userOnline[v.fcmId]) return ioThis.of('/mobile').to(userOnline[v.fcmId]).emit(event, dataSend);
+      fcmIds.push(v.fcmId)
+    })
+    if (!!fcmIds.length) cfNoty.pushNotiWithFcmId({
+      fcmIds,
+      data: { ...dataSend, typeNoti: event },
+      title: 'Thông báo',
+      body,
+    }, (err, data) => {
+      if (err) cf.wirtelog(err, module.filename)
+    })
+  }).catch((err) => {
+    cf.wirtelog(err, module.filename)
+    cf.sendData(res, 'ERROR', 'ERROR', err)
+  });
+}
