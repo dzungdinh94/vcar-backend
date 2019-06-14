@@ -9,7 +9,7 @@ module.exports = {
   cryptoKey: 'B>x2.6BQ:G-HW,><',
   database: {
     USER: 'vcar',
-    PASSWORD: 'Vcar123456@',
+    PASSWORD: 'Motconvit@',
     DATABASENAME: 'dulich',
     HOST: env === "server"?'localhost':'128.199.236.30',
     PORT: 3306,
