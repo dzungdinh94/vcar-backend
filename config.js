@@ -1,7 +1,7 @@
 var env = "dev"
 module.exports = {
   AppName: 'MrCoh',
-  PORT: 3001,
+  PORT: 3000,
   jwtKeyMobile: '@^$(Ujkdfasjdfjvjk)',
   jwtKeyAdmin: '@#KMWKL39578JDKWW',
   jwtSessionExpiresTime: '1h',
