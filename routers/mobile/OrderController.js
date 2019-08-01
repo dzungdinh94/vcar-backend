@@ -12,6 +12,7 @@ const Op = Sequelize.Op;
 const _ = require('lodash')
 const socket = require('../socket')
 const moment = require('moment')
+var GeoPoint = require('geopoint');
 // moment().format()
 //../routeName
 router.use(cors());
@@ -24,15 +25,15 @@ router.post('/getall', jsonParser, async (req, res, next) => {
   let { lat, long } = req.body;
   let typeCarId = (await models.Driver.findById(id)).typeCarId;
 
-  let sql = `SELECT * FROM Orders as od 
-            WHERE od.status = 1 
-            AND od.typeCarId = ${typeCarId}
-            AND dictanceKM( ${lat || 0}, ${long || 0},od.fromLat, od.fromLog ) < 50 `
+  // let sql = `SELECT * FROM Orders as od 
+  //           WHERE od.status = 1 
+  //           AND od.typeCarId = ${typeCarId}
+  //           AND dictanceKM( ${lat || 0}, ${long || 0},od.fromLat, od.fromLog ) < 50 `
   models.Order.findAll({
     where: {
       status: 1,
       typeCarId,
-      [Sequelize.literal]: Sequelize.literal(`dictanceKM( ${lat || 0}, ${long || 0}, fromLat, fromLog ) < 50 `)
+      // [Sequelize.literal]: Sequelize.literal(`dictanceKM( ${lat || 0}, ${long || 0}, fromLat, fromLog ) < 50 `)
     },
     order: [['createdAt', 'DESC']],
     raw: true
@@ -47,7 +48,22 @@ router.post('/getall', jsonParser, async (req, res, next) => {
       v.total = parseInt(v.price) + [...v.serviceAttach].reduce((pV, cV) => pV + parseInt(cV.price || 0), 0);
       return v;
     }))
-    cf.sendData(res, 'SUCCESS', 'SUCCESS', arrSvA) //ERROR
+
+    var dataFilter = [];
+    if(arrSvA.length > 0){
+      arrSvA.map((item,index) => {
+        if(item.toLat !== null || item.toLog !== null){
+         var point1 = new GeoPoint(lat, long)
+         var point2 = new GeoPoint(item.toLat, item.toLog)
+         var distance = point1.distanceTo(point2, true)
+        if(distance < 6){
+        dataFilter.push(item)
+        }
+        }
+        return dataFilter;
+      })
+    }
+    cf.sendData(res, 'SUCCESS', 'SUCCESS', dataFilter) //ERROR
   }).catch((err) => {
     cf.wirtelog(err, module.filename)
     cf.sendData(res, 'ERROR', 'ERROR', err)
