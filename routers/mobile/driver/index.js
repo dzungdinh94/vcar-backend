@@ -28,7 +28,7 @@ router.post('/login', jsonParser, (req, res, next) => {
       // },
       password: Encrypt.encrypt(password)
     },
-    attributes: ['id', 'username', 'phone', 'fullname', 'avatar', 'type', 'numberCar', 'status', 'typeCarId']
+    attributes: ['id', 'username', 'phone', 'fullname', 'avatar', 'type', 'numberCar', 'status', 'typeCarId','nameCar']
   }).then(data => {
     if (!data) return cf.sendData(res, 'ERROR', 'username or password wrong') //ERROR  
     let token = jwt.sign({
