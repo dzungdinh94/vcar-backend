@@ -38,6 +38,7 @@ router.post('/getall', jsonParser, async (req, res, next) => {
     order: [['createdAt', 'DESC']],
     raw: true
   }).then(async data => {
+	   console.log(data,"step1 order getAll");
     let arrSvA = await Promise.all([...data].map(async (v, k) => {
       v.serviceAttach = await models.ServiceAttachOrder.findAll({
         where: {
@@ -48,6 +49,7 @@ router.post('/getall', jsonParser, async (req, res, next) => {
       v.total = parseInt(v.price) + [...v.serviceAttach].reduce((pV, cV) => pV + parseInt(cV.price || 0), 0);
       return v;
     }))
+ console.log(arrSvA,"step2 arrSva ordergetAll");
 
     var dataFilter = [];
     if(arrSvA.length > 0){
@@ -62,7 +64,10 @@ router.post('/getall', jsonParser, async (req, res, next) => {
         }
         return dataFilter;
       })
+
     }
+	   console.log(dataFilter,"step3 datafilter order getAll");
+
     cf.sendData(res, 'SUCCESS', 'SUCCESS', dataFilter) //ERROR
   }).catch((err) => {
     cf.wirtelog(err, module.filename)
@@ -124,7 +129,7 @@ router.post('/create', jsonParser, async (req, res, next) => {
     status: 1,
     price: price,
     driverId:0
-  }).then(async data => {
+  }).then(async data => {  
     let arrSvA = await Promise.all([...serviceAttach].map((v, k) => models.ServiceAttachOrder.create({
       serviceAttachId: v.id,
       orderId: data.id,
