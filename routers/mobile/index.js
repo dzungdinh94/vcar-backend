@@ -55,7 +55,7 @@ router.use('/info', (req, res, next) => AuthMiddeWare.verifyMobile(req, res, nex
 router.get('/info', jsonParser, (req, res, next) => {
   const { id, fcmId, type, userType } = req.user;
   const inforTable = userType == config.userType.user ? models.User : models.Driver
-  let arrAtr = userType == config.userType.user ? [] : ['numberCar', 'status', 'typeCarId', 'rate'];
+  let arrAtr = userType == config.userType.user ? [] : ['numberCar', 'status', 'typeCarId', 'rate','nameCar'];
   inforTable.find({
     where: { id },
     attributes: ['id', 'email', 'phone', 'avatar', 'fullname', ...arrAtr]

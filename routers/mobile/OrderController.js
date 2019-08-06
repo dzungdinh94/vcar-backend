@@ -313,7 +313,7 @@ router.post('/cancel', jsonParser, (req, res, next) => {
   ).then(data => {
     cf.sendData(res, 'SUCCESS', 'SUCCESS', data)
     models.Order.findById(orderId).then(async data => {
-      data.update({ status: 1 })
+      data.update({ status: 3 })
       data = data.toJSON()
       let serviceAttach = await models.ServiceAttachOrder.findAll({
         where: {

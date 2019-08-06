@@ -1,7 +1,7 @@
-var env = "dev"
+var env = "server"
 module.exports = {
   AppName: 'MrCoh',
-  PORT: 3000,
+  PORT: 3001,
   jwtKeyMobile: '@^$(Ujkdfasjdfjvjk)',
   jwtKeyAdmin: '@#KMWKL39578JDKWW',
   jwtSessionExpiresTime: '1h',
@@ -9,9 +9,9 @@ module.exports = {
   cryptoKey: 'B>x2.6BQ:G-HW,><',
   database: {
     USER: 'vcar',
-    PASSWORD: 'Motconvit01@',
+    PASSWORD: 'Vcar123456@',
     DATABASENAME: 'dulich',
-    HOST: env === "server"?'localhost':'139.162.50.22',
+    HOST: env === "server"?'localhost':'128.199.236.30',
     PORT: 3306,
     DIALECT: 'mysql'
   },

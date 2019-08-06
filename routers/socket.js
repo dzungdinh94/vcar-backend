@@ -46,7 +46,7 @@ module.exports.config = (io) => {
 
     socket.emit('test', { a: 'motconvit' })
     socket.on('updatePosition', (data) => {
-      // console.log('dkmmmdkdm')
+       console.log('dkmmmdkdm-------------------------------------------------------------',data);
       socket.emit('updatePosition', data)
     })
 
