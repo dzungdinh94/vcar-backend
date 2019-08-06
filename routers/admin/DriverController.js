@@ -42,7 +42,7 @@ router.post('/getall', jsonParser, (req, res, next) => {
         },
         offset: page * config.pageLimit,
         limit: config.pageLimit,
-        attributes: ['id', 'phone', 'avatar', 'fullname', 'numberCar', 'typeCarId', 'status'],
+        attributes: ['id', 'phone', 'avatar', 'fullname', 'numberCar', 'typeCarId', 'status','nameCar'],
         order: [['id', 'DESC']],
     }).then(data => {
         let { count, rows } = data
@@ -53,14 +53,14 @@ router.post('/getall', jsonParser, (req, res, next) => {
     });
 });
 router.post('/create', jsonParser, (req, res, next) => {
-    let { email, phone, password, fullname, avatar, numberCar, typeCarId } = req.body
+    let { nameCar, phone, password, fullname, avatar, numberCar, typeCarId } = req.body
     if (!phone || !password || !fullname || !numberCar || !typeCarId) return cf.sendData(res, 'ERROR', 'Nhập đầy đủ thông tin');
     models.Driver.findOrCreate({
         where: {
             phone
         },
         defaults: {
-            // email,
+            nameCar,
             password: Encrypt.encrypt(password),
             phone,
             fullname,
@@ -90,9 +90,9 @@ router.post('/getone', jsonParser, (req, res, next) => {
     });
 })
 router.post('/update', jsonParser, (req, res, next) => {
-    let { id, email, phone, password, fullname, avatar, numberCar, typeCarId, status } = req.body
+    let { id, nameCar, phone, password, fullname, avatar, numberCar, typeCarId, status } = req.body
     let objectUpdate = {}
-    // if (!!email) objectUpdate.email = email;
+    if (!!nameCar) objectUpdate.nameCar = nameCar;
     if (!!phone) objectUpdate.phone = phone;
     if (!!fullname) objectUpdate.fullname = fullname;
     if (!!avatar) objectUpdate.avatar = avatar;
