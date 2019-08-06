@@ -45,10 +45,11 @@ module.exports.config = (io) => {
     // console.log(driverOnline, userOnline)
 
     socket.emit('test', { a: 'motconvit' })
-    socket.on('test', (data) => {
-      console.log('dkmmmdkdm')
-      socket.emit('test', { a: 'motconvit' })
+    socket.on('updatePosition', (data) => {
+       console.log('dkmmmdkdm-------------------------------------------------------------',data);
+      socket.emit('updatePosition', data)
     })
+
     socket.on('disconnect', (data) => {
       console.log('disconnect', socket.user)
       if (socket.user.userType == config.userType.user) delete userOnline[socket.user.fcmId];

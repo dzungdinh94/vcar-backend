@@ -28,7 +28,7 @@ router.post('/login', jsonParser, (req, res, next) => {
       // },
       password: Encrypt.encrypt(password)
     },
-    attributes: ['id', 'username', 'phone', 'fullname', 'avatar', 'type', 'numberCar', 'status', 'typeCarId']
+    attributes: ['id', 'username', 'phone', 'fullname', 'avatar', 'type', 'numberCar', 'status', 'typeCarId','nameCar']
   }).then(data => {
     if (!data) return cf.sendData(res, 'ERROR', 'username or password wrong') //ERROR  
     let token = jwt.sign({
@@ -38,7 +38,7 @@ router.post('/login', jsonParser, (req, res, next) => {
       userType: config.userType.driver,
       status: data.status
     }, config.jwtKeyMobile);
-    let { id, username, fullname, avatar, email, type, numberCar, phone, typeCarId, status } = data
+    let { id, username, fullname, avatar, email, type, numberCar, phone, typeCarId, status,nameCar } = data
     models.FcmId.findOrCreate({
       where: { userId: id, fcmId },
       defaults: { userId: id, fcmId, type: config.userType.driver }
@@ -47,7 +47,7 @@ router.post('/login', jsonParser, (req, res, next) => {
       id, username, status,
       fullname, avatar,
       type, token, numberCar,
-      phone, typeCarId
+      phone, typeCarId,nameCar
     })
   }).catch((err) => {
     console.log(err)
