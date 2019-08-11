@@ -357,7 +357,7 @@ router.post('/gocar', jsonParser, (req, res, next) => {
   let { orderId, rate, driverId } = req.body;
   if (userType != config.userType.driver) return cf.sendData(res, 'ERROR', 'User không được kêt thúc đơn hàng');
   models.OrderOfDriver.update(
-    { status: 5, endTime: moment().format('YYYY-MM-DD') },
+    { status: 0, endTime: moment().format('YYYY-MM-DD') },
     { where: { orderId } }
   ).then(data => {
     models.Order.findById(orderId).then(async data => {
