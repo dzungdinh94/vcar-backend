@@ -57,7 +57,7 @@ router.post('/create', jsonParser, (req, res, next) => {
     if (!phone || !password || !fullname || !numberCar || !typeCarId) return cf.sendData(res, 'ERROR', 'Nhập đầy đủ thông tin');
     models.Driver.findOrCreate({
         where: {
-            phone
+            email
         },
         defaults: {
             nameCar,
@@ -90,7 +90,8 @@ router.post('/getone', jsonParser, (req, res, next) => {
     });
 })
 router.post('/update', jsonParser, (req, res, next) => {
-    let { id, nameCar, phone, password, fullname, avatar, numberCar, typeCarId, status } = req.body
+    let { id, nameCar, phone, password, fullname, avatar, numberCar, typeCarId, status } = req.body;
+    console.log(req.body,"driver")
     let objectUpdate = {}
     if (!!nameCar) objectUpdate.nameCar = nameCar;
     if (!!phone) objectUpdate.phone = phone;

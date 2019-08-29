@@ -19,41 +19,44 @@ router.use(cors());
 
 const AdminController = require('./AdminController')
 const UserController = require('./UserController')
-const DriverController = require('./DriverController')
-const TypeCarController = require('./TypeCarController')
-const PriceTimeSlotController = require('./PriceTimeSlotController')
-const PriceDistanceController = require('./PriceDistanceController')
-const ServiceAttachController = require('./ServiceAttachController')
-const NotificationController = require('./NotificationController')
-const OrderController = require('./OrderController')
+const PostsController = require('./PostsController')
+
+// const DriverController = require('./DriverController')
+// const TypeCarController = require('./TypeCarController')
+// const PriceTimeSlotController = require('./PriceTimeSlotController')
+// const PriceDistanceController = require('./PriceDistanceController')
+// const ServiceAttachController = require('./ServiceAttachController')
+// const NotificationController = require('./NotificationController')
+// const OrderController = require('./OrderController')
 const SystemController = require('./SystemController')
 
 router.use('/manager', AdminController)
-router.use('/user', UserController)
-router.use('/driver', DriverController)
-router.use('/typecar', TypeCarController)
-router.use('/pricetimeslot', PriceTimeSlotController)
-router.use('/serviceattach', ServiceAttachController)
-router.use('/notification', NotificationController)
-router.use('/order', OrderController)
+router.use('/user', UserController);
+router.use('/posts',PostsController)
+// router.use('/driver', DriverController)
+// router.use('/typecar', TypeCarController)
+// router.use('/pricetimeslot', PriceTimeSlotController)
+// router.use('/serviceattach', ServiceAttachController)
+// router.use('/notification', NotificationController)
+// router.use('/order', OrderController)
 router.use('/system', SystemController)
-router.use('/pricedistance', PriceDistanceController)
+// router.use('/pricedistance', PriceDistanceController)
 
 router.post('/login', jsonParser, (req, res, next) => {
-  let { username, password } = req.body;
-  models.Admin.find({
-    where: { username, password: Encrypt.encrypt(password) },
-    attributes: ['id', 'username', 'fullname', 'avatar', 'email', 'type']
+  let { email, password } = req.body;
+  models.User.findOne({
+    where: { email, password: Encrypt.encrypt(password),status:1,type:0 },
+    attributes: ['id', 'fullname', 'email', 'type','status']
   }).then(data => {
     if (!data) return cf.sendData(res, 'ERROR', 'username or password wrong') //ERROR  
     let token = jwt.sign({
       id: data.id,
       type: data.type,
-      user: 'Admin'
+      email: 'admin@gmail.com'
     }, config.jwtKeyAdmin);
-    let { id, username, fullname, avatar, email, type } = data
+    let { id, fullname, email, type } = data
     return cf.sendData(res, 'SUCCESS', 'SUCCESS', {
-      id, username, fullname, avatar, email, type, token
+      id, fullname, email, type, token
     })
   }).catch((err) => {
     cf.wirtelog(err, module.filename)
