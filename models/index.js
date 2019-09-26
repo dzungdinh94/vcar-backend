@@ -9,16 +9,11 @@ const db = {};
 db.config = (config) => {
     //cos the tach config service ra day :))
 }
-// let sequelize = new Sequelize(config.databasesUrl);
 const sequelize = new Sequelize(config.database.DATABASENAME, config.database.USER, config.database.PASSWORD, {
     host: config.database.HOST,
     dialect: config.database.DIALECT,
     operatorsAliases: false,
     port: config.database.PORT,
-    // dialectOptions: {
-    //     charset: 'utf8',
-    //     collate: 'utf8_general_ci',
-    // },
     define: {
         underscored: false,
         freezeTableName: false,

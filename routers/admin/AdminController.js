@@ -22,17 +22,13 @@ router.use(cors());
 
 
 router.post('/login', jsonParser, (req, res, next) => {
-  let { username, password } = req.body;
-  models.Admin.find({
+  let { email, password } = req.body;
+  models.Admin.findOne({
     where: {
-      [Op.or]: {
-        username,
-        phone: username,
-        email: username
-      },
+      email,
       password: Encrypt.encrypt(password)
     },
-    attributes: ['id', 'username', 'fullname', 'avatar', 'email', 'type']
+    attributes: ['id', 'fullname', 'email', 'type']
   }).then(data => {
     if (!data) return cf.sendData(res, 'ERROR', 'username or password wrong') //ERROR  
     let token = jwt.sign({
@@ -40,9 +36,9 @@ router.post('/login', jsonParser, (req, res, next) => {
       type: data.type,
       user: 'Admin'
     }, config.jwtKeyAdmin);
-    let { id, username, fullname, avatar, email, type } = data
+    let { id, username, fullname, email, type } = data
     return cf.sendData(res, 'SUCCESS', 'SUCCESS', {
-      id, username, fullname, avatar, email, type, token
+      id, username, fullname, email, type, token
     })
   }).catch((err) => {
     cf.wirtelog(err, module.filename)
@@ -112,7 +108,7 @@ router.post('/getone', jsonParser, (req, res, next) => {
   });
 })
 router.post('/update', jsonParser, (req, res, next) => {
-  let { id, email, phone, password, fullname, avatar } = req.body
+  let { id, email, phone, password, fullname, avatar } = req.body;
   let objectUpdate = {}
   if (!!email) objectUpdate.email = email;
   if (!!phone) objectUpdate.phone = phone;
