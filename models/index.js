@@ -1,3 +1,4 @@
+'use strict';
 const fs = require('fs');
 const path = require('path');
 const Sequelize = require('sequelize');
@@ -10,7 +11,13 @@ db.config = (config) => {
     //cos the tach config service ra day :))
 }
 
-const sequelize = new Sequelize(config.production.url,config.production);
+const sequelize = new Sequelize(process.env.DATABASE_URL, { 
+    dialect: 'postgres',
+    protocol: 'postgres',
+    dialectOptions: {
+        ssl: true
+    }
+});
 
 // const sequelize = new Sequelize(config.database.DATABASENAME, config.database.USER, config.database.PASSWORD, {
 //     host: config.database.HOST,
@@ -47,6 +54,6 @@ Object.keys(db).forEach(modelName => {
 });
 
 db.sequelize = sequelize;
-db.Sequelize = sequelize;
+db.Sequelize = Sequelize;
 
 module.exports = db;
