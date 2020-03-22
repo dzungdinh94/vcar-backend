@@ -9,27 +9,30 @@ const db = {};
 db.config = (config) => {
     //cos the tach config service ra day :))
 }
-const sequelize = new Sequelize(config.database.DATABASENAME, config.database.USER, config.database.PASSWORD, {
-    host: config.database.HOST,
-    dialect: config.database.DIALECT,
-    operatorsAliases: false,
-    port: config.database.PORT,
-    define: {
-        underscored: false,
-        freezeTableName: false,
-        charset: 'utf8',
-        dialectOptions: {
-          collate: 'utf8_general_ci'
-        },
-        timestamps: true
-      },    
-    pool: {
-        max: 5,
-        min: 0,
-        acquire: 30000,
-        idle: 10000
-    }
-});
+
+const sequelize = new Sequelize(config.production.url,config.production);
+
+// const sequelize = new Sequelize(config.database.DATABASENAME, config.database.USER, config.database.PASSWORD, {
+//     host: config.database.HOST,
+//     dialect: config.database.DIALECT,
+//     operatorsAliases: false,
+//     port: config.database.PORT,
+//     define: {
+//         underscored: false,
+//         freezeTableName: false,
+//         charset: 'utf8',
+//         dialectOptions: {
+//           collate: 'utf8_general_ci'
+//         },
+//         timestamps: true
+//       },    
+//     pool: {
+//         max: 5,
+//         min: 0,
+//         acquire: 30000,
+//         idle: 10000
+//     }
+// });
 
 
 fs.readdirSync(__dirname)

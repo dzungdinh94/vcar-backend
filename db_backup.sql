@@ -229,13 +229,7 @@ LOCK TABLES `TypeCars` WRITE;
 /*!40000 ALTER TABLE `TypeCars` ENABLE KEYS */;
 UNLOCK TABLES;
 
---
--- Table structure for table `Users`
---
-
 DROP TABLE IF EXISTS `Users`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `Users` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `username` varchar(255) DEFAULT NULL,

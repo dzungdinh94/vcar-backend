@@ -1,4 +1,4 @@
-var env = "server"
+var env = "dev"
 module.exports = {
   AppName: 'MrCoh',
   PORT: 3001,
@@ -8,10 +8,10 @@ module.exports = {
   algorithm: 'aes256',
   cryptoKey: 'B>x2.6BQ:G-HW,><',
   database: {
-    USER: 'tbook',
-    PASSWORD: 'Toanpro01@',
-    DATABASENAME: 'genland',
-    HOST: env === "server"?'localhost':'128.199.236.30',
+    USER: 'vcar',
+    PASSWORD: 'Vcar123456@',
+    DATABASENAME: 'dulich',
+    HOST: env === "server"?'localhost':'163.44.193.181',
     PORT: 3306,
     DIALECT: 'mysql'
   },
@@ -22,6 +22,10 @@ module.exports = {
   userType: {
     user: 1,
     driver: 2,
+  },
+  production: {
+    url: process.env.DATABASE_URL,
+    dialect: 'postgres',
   },
   passvps:'GMPd9BNNs0bYDD'
 }
