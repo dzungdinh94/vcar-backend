@@ -21,43 +21,39 @@ router.post('/getall', jsonParser, (req, res, next) => {
     page = page || 1;
     page = page - 1
     search = search || '';
-    models.User.findAndCountAll({
+    models.Posts.findAndCountAll({
         where: {
             // status: 1,
             [Op.or]: {
-                email: { [Op.like]: `%${search}%` },
-                phone: { [Op.like]: `%${search}%` },
-                fullname: { [Op.like]: `%${search}%` },
-            }
+                title: { [Op.like]: `%${search}%` },
+                address: { [Op.like]: `%${search}%` },
+                area: { [Op.like]: `%${search}%` },
+            },
+            
         },
+        include: 'User',
         offset: page * config.pageLimit,
         limit: config.pageLimit,
-        attributes: ['id', 'email', 'phone', 'fullname','type','status'],
+        attributes: ['id', 'money', 'commission', 'address', 'title','area','pictures','description','type','status','direction','phone','nameSeller','sales'],
         order: [['id', 'DESC']]
     }).then(data => {
         let { count, rows } = data
+        console.log(rows,"rows");
         cf.sendData(res, 'SUCCESS', 'SUCCESS', { totalPage: Math.ceil(count / config.pageLimit), rows }) //ERROR
     }).catch((err) => {
+        console.log(err,"err");
         cf.wirtelog(err, module.filename)
         cf.sendData(res, 'ERROR', 'ERROR', err) //ERROR
     });
 });
 router.post('/create', jsonParser, (req, res, next) => {
-    let { email, phone, password, fullname, } = req.body
-    if (!fullname || !phone || !password || !email) return cf.sendData(res, 'ERROR', 'Nhập đầy đủ thông tin');
-    models.User.findOrCreate({
-        where: {
-            [Op.or]: { email, phone }
-        },
-        defaults: {
-            email,
-            password: Encrypt.encrypt(password),
-            phone,
-            fullname,
-        
-        }
-    }).spread((data, isCreate) => {
-        if (!isCreate) return cf.sendData(res, 'ERROR', 'data is exist') //ERROR  
+    let { id, type,money,commission,address,title,area,sales,pictures,description,direction,phone,nameSeller,status,UserId } = req.body;
+    if (!type || !money || !commission || !address || !title || !area || !sales || !pictures || !description || !direction || !nameSeller) return cf.sendData(res, 'ERROR', 'Nhập đầy đủ thông tin');
+    models.Posts.create({
+        type,money,commission,address,title,area,sales,pictures,description,direction,phone,nameSeller,UserId
+    }).then((data) => {
+
+        // if (!isCreate) return cf.sendData(res, 'ERROR', 'data is exist') //ERROR  
         return cf.sendData(res, 'SUCCESS', 'SUCCESS', data) //ERROR
     }).catch(err => {
         cf.wirtelog(err, module.filename)
@@ -68,7 +64,7 @@ router.post('/getone', jsonParser, (req, res, next) => {
     let { id } = req.body
     models.User.find({
         where: { id },
-        attributes: ['id', 'email', 'phone','fullname']
+        attributes: ['id', 'email', 'phone', 'fullname']
     }).then(data => {
         if (!data) return cf.sendData(res, 'ERROR', 'user is not exist') //ERROR  
         return cf.sendData(res, 'SUCCESS', 'SUCCESS', data) //ERROR
@@ -78,20 +74,32 @@ router.post('/getone', jsonParser, (req, res, next) => {
     });
 })
 router.post('/update', jsonParser, (req, res, next) => {
-    let { id, email, phone, fullname, password,type,status } = req.body
+    let { id, type,money,commission,address,title,area,sales,pictures,description,direction,phone,nameSeller,status } = req.body;
+    console.log(pictures,"pictures");
     let objectUpdate = {}
-    if (!!email) objectUpdate.email = email;
     if (!!phone) objectUpdate.phone = phone;
-    if (!!fullname) objectUpdate.fullname = fullname;
-    if (!!type) objectUpdate.type = type;
-    if (!!status || status == 0) objectUpdate.status = status;
+    if (type !== null || type !== undefined) objectUpdate.type = type;
+    if (!!money) objectUpdate.money = money;
+    if (!!commission) objectUpdate.commission = commission;
+    if (!!address) objectUpdate.address = address;
+    if (!!title) objectUpdate.title = title;
+    if (!!sales) objectUpdate.sales = sales;
+    if (!!area) objectUpdate.area = area;
+    if (!!pictures) objectUpdate.pictures = pictures;
+    if (!!description) objectUpdate.description = description;
+    if (!!direction) objectUpdate.direction = direction;
+    if (!!nameSeller) objectUpdate.nameSeller = nameSeller;
+    if (status !== null || status !== undefined) objectUpdate.status = status;
+    
     // if (!!password) objectUpdate.password = Encrypt.encrypt(password)
-    models.User.update(
+    models.Posts.update(
         { ...objectUpdate },
         { where: { id } }
     ).then(data => {
+        // console.log(data,"err");
         cf.sendData(res, 'SUCCESS', 'SUCCESS', data) //ERROR
     }).catch((err) => {
+        // console.log(err,"err");
         cf.wirtelog(err, module.filename)
         cf.sendData(res, 'ERROR', 'ERROR', err) //ERROR
     });
@@ -99,7 +107,7 @@ router.post('/update', jsonParser, (req, res, next) => {
 router.post('/delete', jsonParser, (req, res, next) => {
     let { id } = req.body
     if (!id) return cf.sendData(res, 'ERROR', 'ERROR');
-        models.User.destroy({
+        models.Posts.destroy({
             where: { id },
         }).then(data => {
             cf.sendData(res, 'SUCCESS', 'SUCCESS', data)

@@ -8,10 +8,17 @@ module.exports = {
   algorithm: 'aes256',
   cryptoKey: 'B>x2.6BQ:G-HW,><',
   database: {
+<<<<<<< HEAD
     USER: 'vcar',
     PASSWORD: 'Vcar123456@',
     DATABASENAME: 'dulich',
     HOST: env === "server"?'localhost':'163.44.193.181',
+=======
+    USER: 'tbook',
+    PASSWORD: 'Toanpro01@',
+    DATABASENAME: 'genland',
+    HOST: env === "server"?'localhost':'128.199.236.30',
+>>>>>>> 5a8bf3cb5c5bb13b763925d9eef532832b0ffc6d
     PORT: 3306,
     DIALECT: 'mysql'
   },
