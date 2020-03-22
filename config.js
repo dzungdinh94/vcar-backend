@@ -27,5 +27,9 @@ module.exports = {
     url: process.env.DATABASE_URL,
     dialect: 'postgres',
   },
+  dev: {
+    url: process.env.DATABASE_URL,
+    dialect: 'postgres',
+  },
   passvps:'GMPd9BNNs0bYDD'
 }
