@@ -6,6 +6,7 @@ const app = express();
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const http = require('http').Server(app);
+const cool = require('cool-ascii-faces')
 const io = require('socket.io')(
   http,
   {
@@ -22,6 +23,7 @@ const indexRouter = require('./routers/index');
 const socket = require('./routers/socket')
 
 app.use(cors());
+
 // Log requests to the console.
 app.use(logger('dev'));
 app.use(express.static('public'));
