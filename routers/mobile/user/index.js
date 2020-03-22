@@ -19,7 +19,8 @@ const Op = Sequelize.Op;
 router.use(cors());
 
 router.post('/login', jsonParser, (req, res, next) => {
-  const { email, phone, password, fullname, avatar, fcmId, idfacebook } = req.body
+  const { email, phone, password, fullname, avatar, fcmId, idfacebook } = req.body;
+  
   // console.log(fcmId,"fcmId server");
   console.log(phone,idfacebook,"server")
   if (!phone && !idfacebook) return cf.sendData(res, 'ERROR', 'Nhập đầy đủ thông tin');
@@ -53,6 +54,7 @@ router.post('/login', jsonParser, (req, res, next) => {
       userType: config.userType.user
     }, config.jwtKeyMobile);
     let { id, username, fullname, avatar, type, phone, idfacebook } = data
+    
     return cf.sendData(res, 'SUCCESS', 'SUCCESS', {
       id, username,
       fullname, avatar,
