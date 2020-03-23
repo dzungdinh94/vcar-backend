@@ -27,7 +27,6 @@ router.post('/getall', jsonParser, (req, res, next) => {
       [Op.or]: {
         name: { [Op.like]: `%${search}%` },
         description: { [Op.like]: `%${search}%` },
-        weight: { [Op.like]: `%${search}%` },
       }
     },
     offset: !!isAll ? 0 : page * config.pageLimit,
