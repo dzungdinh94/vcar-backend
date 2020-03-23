@@ -12,7 +12,8 @@ init = () => {
       password: Encrypt.encrypt('123456'),
       fullname: 'Administrator',
       type: 0,
-      phone:"0909999999"
+      phone:"0909999999",
+      username:"admin"
     },
     raw: true
   }).spread((data, isCreate) => {
