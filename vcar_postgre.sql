@@ -321,6 +321,7 @@ CREATE TABLE vantai.users (
     password character varying(255),
     fullname character varying(255),
     avatar character varying(255),
+    idfacebook character varying(255),
     type bigint DEFAULT '0'::bigint,
     status bigint DEFAULT '1'::bigint,
     numnoti bigint DEFAULT '0'::bigint,
