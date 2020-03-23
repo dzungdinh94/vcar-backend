@@ -44,7 +44,7 @@ router.use('/pricedistance', PriceDistanceController)
 
 router.post('/login', jsonParser, (req, res, next) => {
   let { email, password } = req.body;
-  models.User.findOne({
+  models.Admin.findOne({
     where: { email, password: Encrypt.encrypt(password),status:1,type:0 },
     attributes: ['id', 'fullname', 'email', 'type','status']
   }).then(data => {
