@@ -10,31 +10,13 @@ db.config = (config) => {
     //cos the tach config service ra day :))
 }
 // let sequelize = new Sequelize(config.databasesUrl);
-const sequelize = new Sequelize(config.database.DATABASENAME, config.database.USER, config.database.PASSWORD, {
-    host: config.database.HOST,
-    dialect: config.database.DIALECT,
-    operatorsAliases: false,
-    port: config.database.PORT,
-    // dialectOptions: {
-    //     charset: 'utf8',
-    //     collate: 'utf8_general_ci',
-    // },
-    define: {
-        underscored: false,
-        freezeTableName: false,
-        charset: 'utf8',
-        dialectOptions: {
-          collate: 'utf8_general_ci'
-        },
-        timestamps: true
-      },    
-    pool: {
-        max: 5,
-        min: 0,
-        acquire: 30000,
-        idle: 10000
+const sequelize = new Sequelize(process.env.DATABASE_URL, { 
+    dialect: 'postgres',
+    protocol: 'postgres',
+    dialectOptions: {
+        ssl: true
     }
-});
+  });
 
 
 fs.readdirSync(__dirname)
