@@ -5,7 +5,7 @@ const cf = require('../../helpers/CF')
 // CREATE DATABASE vantai CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 init = () => {
-  models.User.findOrCreate({
+  models.Admin.findOrCreate({
     where: { email: 'admin@gmail.com' },
     defaults: {
       email: 'admin@gmail.com',
