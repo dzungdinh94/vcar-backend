@@ -22,17 +22,15 @@ router.post('/login', jsonParser, (req, res, next) => {
   const { email, phone, password, fullname, avatar, fcmId, idfacebook } = req.body
   // console.log(fcmId,"fcmId server");
   console.log(phone,idfacebook,"server")
-  if (!phone && !idfacebook) return cf.sendData(res, 'ERROR', 'Nhập đầy đủ thông tin');
+  if (!phone) return cf.sendData(res, 'ERROR', 'Nhập đầy đủ thông tin');
   if (!fcmId) return cf.sendData(res, 'ERROR', 'Chưa có fcmid');
   let objectWhere = {}
-  if (!!idfacebook) objectWhere.idfacebook = idfacebook
-  else objectWhere.phone = phone;
+  objectWhere.phone = phone;
   models.User.findOrCreate({
     where: objectWhere,
     defaults: {
       // email,
       phone,
-      idfacebook,
       // password: Encrypt.encrypt(password),
       fullname,
       avatar
