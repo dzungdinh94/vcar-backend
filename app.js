@@ -50,7 +50,7 @@ models.sequelize.sync().then(() => {
   // app.listen(config.PORT, () => {
   //   console.log('App is listening on port: ' + config.PORT)
   // })
-  var server_port = process.env.PORT || 80;
+  var server_port = config.PORT || 80;
   http.listen(server_port, () => {
     console.log('App and Socket.io listening on: ' + config.PORT);
     initData();
