@@ -10,11 +10,11 @@ db.config = (config) => {
     //cos the tach config service ra day :))
 }
 // let sequelize = new Sequelize(config.databasesUrl);
-const sequelize = new Sequelize(process.env.DATABASE_URL, { 
+const sequelize = new Sequelize("postgresql://postgres@localhost/vantai", { 
     dialect: 'postgres',
     protocol: 'postgres',
     dialectOptions: {
-        ssl: true
+        ssl: false
     }
   });
 
